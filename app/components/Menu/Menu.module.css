@@ -1,0 +1,15 @@
+.menu {
+  display: flex;
+  justify-content: space-around;
+  height: 100%;
+  width: 100%;
+}
+
+.menuloading {
+  width: 100%;
+}
+
+.clickhere:hover {
+  cursor: pointer;
+  box-shadow: 3px 1px 30px gray;
+}

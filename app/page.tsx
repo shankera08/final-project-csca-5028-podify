@@ -1,6 +1,7 @@
 import CuratedShows from "./components/CuratedShows/CuratedShows";
 import styles from "./page.module.css";
 import { ICategory, IPodcast } from "./types/podcast";
+import Menu from "./components/Menu/Menu";
 
 const appUrl = process.env.NEXT_PUBLIC_APP_URL;
 
@@ -14,7 +15,10 @@ export default async function Home() {
   if (categories?.length > 0) {
     const showsPromises = categories?.map((category: ICategory) =>
       fetch(
-        `${appUrl}/api/queries/shows/${category.category_id}?title=${category.name}`
+        `${appUrl}/api/queries/shows/${category.category_id}?title=${category.name}`,
+        {
+          cache: "no-store",
+        }
       )
     );
     const showsResponse = await Promise.all(showsPromises);
@@ -25,8 +29,10 @@ export default async function Home() {
       }
     }
   }
+
   return (
     <main className={styles.main}>
+      <Menu />
       <CuratedShows curatedShows={curatedShows} />
     </main>
   );

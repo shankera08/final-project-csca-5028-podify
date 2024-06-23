@@ -15,6 +15,7 @@ export async function GET(
         const result = await sql.query(`
             SELECT show_id, title, image_url 
             FROM shows WHERE category_id = $1
+            ORDER BY id DESC
         `, [categoryId]);
 
         const shows: IPodcast[] = result?.rowCount > 0 ? result?.rows?.map((show) => ({

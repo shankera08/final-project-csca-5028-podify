@@ -22,3 +22,9 @@ export interface ICategory {
 export interface ICategoryPodcasts {
   [category: string]: IPodcast[] | undefined;
 }
+
+export interface ICategoryShowDuration {
+  category_id: number;
+  name: string;
+  total_duration: number;
+}
