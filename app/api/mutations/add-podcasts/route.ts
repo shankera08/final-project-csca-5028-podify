@@ -6,7 +6,7 @@ import { IShowApi } from "@/app/types/show";
 import { sql } from "@vercel/postgres";
 import { NextResponse } from "next/server";
 
-const LIMIT = 5;
+const LIMIT = 7;
 
 const showAPIUrl = (categoryId: number, limit: number) =>
     `https://api.spreaker.com/v2/explore/categories/${categoryId}/items?limit=${limit}`;
@@ -41,8 +41,8 @@ async function upsertEpisodes(episodes: IEpisodeApi[]) {
     const valuesQuery = [];
     let i = 1;
     for (const episode of episodes) {
-        values.push(...[episode.episode_id, episode.show_id, episode.title, episode.author_id, episode.explicit, episode.image_url, episode.playback_url]);
-        valuesQuery.push(`($${i++}, $${i++}, $${i++}, $${i++}, $${i++}, $${i++}, $${i++})`);
+        values.push(...[episode.episode_id, episode.show_id, episode.title, episode.author_id, episode.explicit, episode.image_url, episode.playback_url, episode.duration]);
+        valuesQuery.push(`($${i++}, $${i++}, $${i++}, $${i++}, $${i++}, $${i++}, $${i++}, $${i++})`);
     }
     const valuesStr = `${valuesQuery.join(', ')}`;
     const query = `
@@ -53,7 +53,8 @@ async function upsertEpisodes(episodes: IEpisodeApi[]) {
             author_id, 
             explicit,
             image_url,
-            playback_url
+            playback_url,
+            duration
         ) VALUES ${valuesStr} 
         ON CONFLICT (episode_id) DO UPDATE SET playback_url = EXCLUDED.playback_url;`;
     await sql.query(query, values);
@@ -78,6 +79,18 @@ async function upsertDataCollector(dcs: IDataCollector[]) {
     console.log(dcQuery);
     console.log(dcValues);
     await sql.query(dcQuery, dcValues);
+}
+
+async function checkShowCount() {
+    const showCount = (await sql.query(`SELECT COUNT(id) AS num_shows FROM shows;`))?.rows;
+    if (showCount && showCount?.length > 0) {
+        if (showCount[0].num_shows > 120) {
+            // rest shows for performance
+            await sql.query(`DELETE FROM episodes;`);
+            await sql.query(`DELETE FROM shows;`);
+            await sql.query(`DELETE FROM data_collector;`);
+        }
+    }
 }
 
 async function processNextEpisodes(showDCs: IDataCollector[]) {
@@ -182,6 +195,7 @@ async function processNewShows(categories: ICategory[]) {
 
 export async function POST() {
     try {
+        await checkShowCount();
         const dcs: IDataCollector[] = (await sql.query(`SELECT * FROM data_collector;`))?.rows;
         console.log('dcs current', dcs);
         if (dcs && dcs.length > 0) {
@@ -191,7 +205,7 @@ export async function POST() {
             const categoryDCs = dcs.filter(dc => !dc.show_id && dc.next_url);
             await processNextShows(categoryDCs);
         } else {
-            const categories = (await sql.query(`SELECT * FROM category LIMIT 5;`))?.rows;
+            const categories = (await sql.query(`SELECT * FROM category ORDER BY name LIMIT 5;`))?.rows;
             console.log('categories', categories);
             if (categories) {
                 await processNewShows(categories);
@@ -201,5 +215,5 @@ export async function POST() {
         return NextResponse.json({ error }, { status: 500 });
     }
 
-    return NextResponse.json({ message: 'Podcasts added successfully' }, { status: 200 });
+    return NextResponse.json({ message: 'Podcasts added successfully', success: true }, { status: 200 });
 }

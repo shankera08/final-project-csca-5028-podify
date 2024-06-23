@@ -7,4 +7,5 @@ export interface IEpisodeApi {
   image_url: string;
   playback_url: string;
   explicit: boolean;
+  duration: number;
 }

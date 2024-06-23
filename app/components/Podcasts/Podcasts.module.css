@@ -12,3 +12,8 @@
   align-items: center;
   justify-content: center;
 }
+
+.icons:hover {
+  cursor: pointer;
+  box-shadow: 3px 1px 4px black;
+}

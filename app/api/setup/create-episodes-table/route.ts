@@ -13,7 +13,8 @@ export async function POST() {
                     author_id INT, 
                     explicit BOOLEAN DEFAULT FALSE,
                     image_url TEXT,
-                    playback_url TEXT
+                    playback_url TEXT,
+                    duration INT
                 );
             `;
         return NextResponse.json({ result }, { status: 200 });
