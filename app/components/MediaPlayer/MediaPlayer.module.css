@@ -1,0 +1,26 @@
+.player {
+  display: flex;
+  background-color: black;
+  text-align: left;
+  color: red;
+  font-size: 40px;
+  z-index: 10;
+  position: fixed;
+  bottom: 0px;
+  left: 0px;
+  width: 100%;
+}
+
+.icons {
+  display: flex;
+  margin: 10px;
+}
+
+.play,
+.pause {
+  padding: 10px;
+}
+
+.title {
+  padding: 20px;
+}

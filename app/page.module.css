@@ -1,0 +1,29 @@
+.main {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.curated {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.category {
+  display: flex;
+  flex-direction: column;
+  padding: 15px;
+}
+
+.title {
+  font-size: 30px;
+  font-weight: bold;
+  padding: 10px;
+}
+
+.podcasts {
+  display: flex;
+  flex-direction: row;
+}
