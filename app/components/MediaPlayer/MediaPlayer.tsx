@@ -1,23 +1,15 @@
 "use client";
 
 import React, { useContext, useEffect, useRef } from "react";
-
-// Types
 import { PlayerActionType } from "../../types/player";
-
-// Global Store - Context API
 import { playerStore } from "../../store/player";
-
 import styles from "./MediaPlayer.module.css";
 import { FaPlay, FaPause } from "react-icons/fa";
 
 const MediaPlayer = () => {
-  // global state object
   const playerState = useContext(playerStore);
-  // ref to media player
   const mediaRef = useRef<HTMLMediaElement>(null);
 
-  // update media player based on global state
   useEffect(() => {
     if (playerState.state.media) {
       if (mediaRef.current) {
@@ -37,12 +29,10 @@ const MediaPlayer = () => {
       : "";
   };
 
-  // onClick handler for play icon
   const play = () => {
     playerState.dispatch({ type: PlayerActionType.play });
   };
 
-  // onClick handler for pause icon
   const pause = () => {
     playerState.dispatch({ type: PlayerActionType.pause });
   };
