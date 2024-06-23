@@ -6,6 +6,8 @@ import { IShowApi } from "@/app/types/show";
 import { sql } from "@vercel/postgres";
 import { NextResponse } from "next/server";
 
+export const maxDuration = 60;
+
 const LIMIT = 7;
 
 const showAPIUrl = (categoryId: number, limit: number) =>
@@ -84,7 +86,7 @@ async function upsertDataCollector(dcs: IDataCollector[]) {
 async function checkShowCount() {
     const showCount = (await sql.query(`SELECT COUNT(id) AS num_shows FROM shows;`))?.rows;
     if (showCount && showCount?.length > 0) {
-        if (showCount[0].num_shows > 120) {
+        if (showCount[0].num_shows > 100) {
             // rest shows for performance
             await sql.query(`DELETE FROM episodes;`);
             await sql.query(`DELETE FROM shows;`);
