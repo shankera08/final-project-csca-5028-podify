@@ -1,5 +1,7 @@
 import { NextResponse } from "next/server";
 
+export const maxDuration = 60;
+
 const appUrl = process.env.NEXT_PUBLIC_APP_URL;
 
 export async function GET() {
