@@ -1,3 +1,4 @@
+import { Client } from "@upstash/qstash";
 import { IApiResponse } from "@/app/types/api";
 import { IDataCollector } from "@/app/types/dataCollector";
 import { IEpisodeApi } from "@/app/types/episode";
@@ -8,6 +9,8 @@ import { NextResponse } from "next/server";
 
 export const maxDuration = 60;
 
+const appUrl = process.env.NEXT_PUBLIC_APP_URL;
+
 const LIMIT = 7;
 
 const showAPIUrl = (categoryId: number, limit: number) =>
@@ -15,6 +18,10 @@ const showAPIUrl = (categoryId: number, limit: number) =>
 
 const episodesAPIUrl = (showId: number, limit: number) =>
     `https://api.spreaker.com/v2/shows/${showId}/episodes?limit=${limit}&sorting=oldest`;
+
+const qstashClient = new Client({
+    token: process.env.QSTASH_TOKEN || '',
+});
 
 async function upsertShows(shows: IShowApi[]) {
     const values = [];
@@ -86,34 +93,12 @@ async function upsertDataCollector(dcs: IDataCollector[]) {
 async function checkShowCount() {
     const showCount = (await sql.query(`SELECT COUNT(id) AS num_shows FROM shows;`))?.rows;
     if (showCount && showCount?.length > 0) {
-        if (showCount[0].num_shows > 100) {
+        if (showCount[0].num_shows > 200) {
             // rest shows for performance
             await sql.query(`DELETE FROM episodes;`);
             await sql.query(`DELETE FROM shows;`);
             await sql.query(`DELETE FROM data_collector;`);
         }
-    }
-}
-
-async function processNextEpisodes(showDCs: IDataCollector[]) {
-    const dcs: IDataCollector[] = [];
-    for (const showDC of showDCs) {
-        const epRes = await fetch(showDC.next_url);
-        if (epRes.ok) {
-            const epRaw: IApiResponse = await epRes.json();
-            const epApiRes: IApiResponse['response'] = epRaw?.response;
-            console.log('epApiRes', epApiRes);
-            const episodes: IEpisodeApi[] = epApiRes?.items?.map((episode: IEpisodeApi) => episode);
-            if (episodes && episodes.length > 0) {
-                await upsertEpisodes(episodes);
-            }
-            if (epApiRes?.next_url) {
-                dcs.push({ ...showDC, next_url: epApiRes.next_url });
-            }
-        }
-    }
-    if (dcs.length > 0) {
-        await upsertDataCollector(dcs);
     }
 }
 
@@ -201,8 +186,11 @@ export async function POST() {
         const dcs: IDataCollector[] = (await sql.query(`SELECT * FROM data_collector;`))?.rows;
         console.log('dcs current', dcs);
         if (dcs && dcs.length > 0) {
-            const showDCs = dcs.filter(dc => !dc.category_id && dc.next_url);
-            await processNextEpisodes(showDCs);
+            const qstashResponse = await qstashClient.publishJSON({
+                url: `${appUrl}/api/notify`,
+                body: JSON.stringify({ dcs }),
+            });
+            console.log('qstash response', qstashResponse);
 
             const categoryDCs = dcs.filter(dc => !dc.show_id && dc.next_url);
             await processNextShows(categoryDCs);
@@ -214,6 +202,7 @@ export async function POST() {
             }
         }
     } catch (error) {
+        console.log('Error', error);
         return NextResponse.json({ error }, { status: 500 });
     }
 

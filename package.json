@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@upstash/qstash": "^2.5.5",
     "@vercel/postgres": "^0.8.0",
     "formik": "^2.4.6",
     "next": "14.2.4",
