@@ -1,11 +1,5 @@
 import { verifySignatureAppRouter } from "@upstash/qstash/nextjs";
 
-export const dynamic = "force-dynamic";
-
-export const config = {
-    api: { bodyParser: false },
-};
-
 async function handler(request: Request) {
     const data = await request.json();
 
