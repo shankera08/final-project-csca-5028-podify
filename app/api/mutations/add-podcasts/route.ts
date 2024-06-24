@@ -1,3 +1,4 @@
+import { Client } from "@upstash/qstash";
 import { IApiResponse } from "@/app/types/api";
 import { IDataCollector } from "@/app/types/dataCollector";
 import { IEpisodeApi } from "@/app/types/episode";
@@ -8,6 +9,8 @@ import { NextResponse } from "next/server";
 
 export const maxDuration = 60;
 
+const appUrl = process.env.NEXT_PUBLIC_APP_URL;
+
 const LIMIT = 7;
 
 const showAPIUrl = (categoryId: number, limit: number) =>
@@ -15,6 +18,10 @@ const showAPIUrl = (categoryId: number, limit: number) =>
 
 const episodesAPIUrl = (showId: number, limit: number) =>
     `https://api.spreaker.com/v2/shows/${showId}/episodes?limit=${limit}&sorting=oldest`;
+
+const qstashClient = new Client({
+    token: process.env.QSTASH_TOKEN || '',
+});
 
 async function upsertShows(shows: IShowApi[]) {
     const values = [];
@@ -201,6 +208,11 @@ export async function POST() {
         const dcs: IDataCollector[] = (await sql.query(`SELECT * FROM data_collector;`))?.rows;
         console.log('dcs current', dcs);
         if (dcs && dcs.length > 0) {
+            const qstashResponse = await qstashClient.publishJSON({
+                url: `${appUrl}/api/notify`,
+                body: JSON.stringify({ dcsCount: dcs.length }),
+            });
+            console.log('qstash response', qstashResponse);
             const showDCs = dcs.filter(dc => !dc.category_id && dc.next_url);
             await processNextEpisodes(showDCs);
 
@@ -214,6 +226,7 @@ export async function POST() {
             }
         }
     } catch (error) {
+        console.log('Errror', error);
         return NextResponse.json({ error }, { status: 500 });
     }
 
