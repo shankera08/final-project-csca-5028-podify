@@ -5,6 +5,9 @@ import { ICategory } from "@/app/types/podcast";
 import { IShowApi } from "@/app/types/show";
 import { sql } from "@vercel/postgres";
 import { NextResponse } from "next/server";
+import * as amqp from "amqplib/callback_api";
+
+const amqpUrl = process.env.AMQP_URL;
 
 export const maxDuration = 60;
 
@@ -197,22 +200,34 @@ async function processNewShows(categories: ICategory[]) {
 
 export async function POST() {
     try {
-        await checkShowCount();
-        const dcs: IDataCollector[] = (await sql.query(`SELECT * FROM data_collector;`))?.rows;
-        console.log('dcs current', dcs);
-        if (dcs && dcs.length > 0) {
-            const showDCs = dcs.filter(dc => !dc.category_id && dc.next_url);
-            await processNextEpisodes(showDCs);
-
-            const categoryDCs = dcs.filter(dc => !dc.show_id && dc.next_url);
-            await processNextShows(categoryDCs);
-        } else {
-            const categories = (await sql.query(`SELECT * FROM category ORDER BY name LIMIT 5;`))?.rows;
-            console.log('categories', categories);
-            if (categories) {
-                await processNewShows(categories);
+        amqp.connect(amqpUrl, (error0, connection) => {
+            if (error0) {
+                throw error0;
             }
-        }
+
+            connection.createChannel(async (error1, channel) => {
+                if (error1) {
+                    throw error1;
+                }
+
+                await checkShowCount();
+                const dcs: IDataCollector[] = (await sql.query(`SELECT * FROM data_collector;`))?.rows;
+                console.log('dcs current', dcs);
+                if (dcs && dcs.length > 0) {
+                    const showDCs = dcs.filter(dc => !dc.category_id && dc.next_url);
+                    await processNextEpisodes(showDCs);
+
+                    const categoryDCs = dcs.filter(dc => !dc.show_id && dc.next_url);
+                    await processNextShows(categoryDCs);
+                } else {
+                    const categories = (await sql.query(`SELECT * FROM category ORDER BY name LIMIT 5;`))?.rows;
+                    console.log('categories', categories);
+                    if (categories) {
+                        await processNewShows(categories);
+                    }
+                }
+            })
+        })
     } catch (error) {
         return NextResponse.json({ error }, { status: 500 });
     }
