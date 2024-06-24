@@ -1,0 +1,32 @@
+.title {
+  display: flex;
+  justify-content: center;
+}
+
+.formfields {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  height: 500px;
+}
+
+.agecheck {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+}
+
+.categories {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+}
+
+.clickhere {
+  width: 10%;
+}
+
+.clickhere:hover {
+  cursor: pointer;
+  box-shadow: 3px 1px 30px gray;
+}
