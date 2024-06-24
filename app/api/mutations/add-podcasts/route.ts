@@ -102,28 +102,6 @@ async function checkShowCount() {
     }
 }
 
-async function processNextEpisodes(showDCs: IDataCollector[]) {
-    const dcs: IDataCollector[] = [];
-    for (const showDC of showDCs) {
-        const epRes = await fetch(showDC.next_url);
-        if (epRes.ok) {
-            const epRaw: IApiResponse = await epRes.json();
-            const epApiRes: IApiResponse['response'] = epRaw?.response;
-            console.log('epApiRes', epApiRes);
-            const episodes: IEpisodeApi[] = epApiRes?.items?.map((episode: IEpisodeApi) => episode);
-            if (episodes && episodes.length > 0) {
-                await upsertEpisodes(episodes);
-            }
-            if (epApiRes?.next_url) {
-                dcs.push({ ...showDC, next_url: epApiRes.next_url });
-            }
-        }
-    }
-    if (dcs.length > 0) {
-        await upsertDataCollector(dcs);
-    }
-}
-
 async function processNextShows(categoryDCs: IDataCollector[]) {
     const dcs: IDataCollector[] = [];
     const upsertedShows: IShowApi[] = [];
@@ -210,11 +188,9 @@ export async function POST() {
         if (dcs && dcs.length > 0) {
             const qstashResponse = await qstashClient.publishJSON({
                 url: `${appUrl}/api/notify`,
-                body: JSON.stringify({ dcsCount: dcs.length }),
+                body: JSON.stringify({ dcs }),
             });
             console.log('qstash response', qstashResponse);
-            const showDCs = dcs.filter(dc => !dc.category_id && dc.next_url);
-            await processNextEpisodes(showDCs);
 
             const categoryDCs = dcs.filter(dc => !dc.show_id && dc.next_url);
             await processNextShows(categoryDCs);
