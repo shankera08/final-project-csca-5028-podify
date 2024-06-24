@@ -2,5 +2,8 @@
     "crons": [{
       "path": "/api/mutations/add-podcasts",
       "schedule": "22 13 * * *"
-    }]
+    }, {
+        "path": "/api/health-check",
+        "schedule": "0 15 * * *"
+      }]
   }
