@@ -1,6 +1,6 @@
 {
     "crons": [{
       "path": "/api/mutations/add-podcasts",
-      "schedule": "20 13 * * *"
+      "schedule": "22 13 * * *"
     }]
   }
