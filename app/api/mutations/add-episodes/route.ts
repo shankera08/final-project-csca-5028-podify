@@ -86,9 +86,9 @@ export async function POST(request: NextRequest) {
             await processNextEpisodes(showDCs);
         }
     } catch (error) {
-        console.log('Errror', error);
+        console.log('Error', error);
         return NextResponse.json({ error }, { status: 500 });
     }
 
-    return NextResponse.json({ message: 'Podcasts added successfully', success: true }, { status: 200 });
+    return NextResponse.json({ message: 'Episodes added successfully', success: true }, { status: 200 });
 }
