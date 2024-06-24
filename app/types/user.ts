@@ -1,9 +1,6 @@
-export interface UserDetails {
+export interface IUserDetails {
     emailAddress: string;
-    categoryId: number;
     firstName: string;
     lastName: string;
     country: string;
-    isAdult: boolean;
-    categoryIdPreference: string;
 }

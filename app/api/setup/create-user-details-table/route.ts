@@ -6,11 +6,9 @@ export async function POST() {
         const result =
             await sql`
                 CREATE TABLE IF NOT EXISTS user_details ( 
-                    email_address TEXT PRIMARY KEY, 
-                    category_id_preference TEXT,
+                    email_address TEXT PRIMARY KEY,
                     first_name VARCHAR(255),
                     last_name VARCHAR(255),
-                    is_adult BOOLEAN DEFAULT FALSE,
                     country VARCHAR(255)
                 );
             `;

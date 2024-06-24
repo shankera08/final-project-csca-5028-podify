@@ -38,7 +38,7 @@ const Menu = () => {
   return apiCallState === "start api call" ? (
     <div className={styles.menuloading}>
       <LoadingSkeleton
-        message="Fetching more shows (may have to wait for upto 5 mins)...."
+        message="Fetching more shows (may have to wait for upto 2 mins)...."
         baseColor="#e3ccb0"
       />
     </div>

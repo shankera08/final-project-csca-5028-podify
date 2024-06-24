@@ -1,0 +1,8 @@
+.clickhere {
+  width: 10%;
+}
+
+.clickhere:hover {
+  cursor: pointer;
+  box-shadow: 3px 1px 30px gray;
+}

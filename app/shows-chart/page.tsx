@@ -4,6 +4,7 @@ import { ICategoryShowDuration } from "@/app/types/podcast";
 import Link from "next/link";
 import { useLayoutEffect, useState } from "react";
 import { Bar, BarChart, Legend, Tooltip, XAxis, YAxis } from "recharts";
+import styles from "./page.module.css";
 
 const appUrl = process.env.NEXT_PUBLIC_APP_URL;
 
@@ -28,7 +29,9 @@ const ShowsChart = () => {
   return (
     <>
       <Link href="/">
-        <h3>Back to Podcasts</h3>
+        <div className={styles.clickhere}>
+          <h3>Back to Podcasts</h3>
+        </div>
       </Link>
       <br></br>
       <h2>Chart displays the total content hours available by Category</h2>
