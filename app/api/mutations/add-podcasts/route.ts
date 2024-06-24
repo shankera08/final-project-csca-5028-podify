@@ -93,7 +93,7 @@ async function upsertDataCollector(dcs: IDataCollector[]) {
 async function checkShowCount() {
     const showCount = (await sql.query(`SELECT COUNT(id) AS num_shows FROM shows;`))?.rows;
     if (showCount && showCount?.length > 0) {
-        if (showCount[0].num_shows > 150) {
+        if (showCount[0].num_shows > 200) {
             // rest shows for performance
             await sql.query(`DELETE FROM episodes;`);
             await sql.query(`DELETE FROM shows;`);
