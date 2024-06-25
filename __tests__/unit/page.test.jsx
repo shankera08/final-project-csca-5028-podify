@@ -1,6 +1,6 @@
 import '@testing-library/jest-dom'
 import { render, screen } from '@testing-library/react'
-import Home from '../app/page'
+import Home from '../../app/page'
 
 async function resolvedComponent(Component, props) {
     const ComponentResolved = await Component(props)
@@ -8,12 +8,12 @@ async function resolvedComponent(Component, props) {
 }
 
 // Mock Menu
-jest.mock('../app/components/Menu/Menu', () => {
+jest.mock('../../app/components/Menu/Menu', () => {
     return jest.fn(() => <div data-testid="menu"></div>);
   });
 
 // Mock Menu
-jest.mock('../app/components/CuratedShows/CuratedShows', () => {
+jest.mock('../../app/components/CuratedShows/CuratedShows', () => {
     return jest.fn(() => <div data-testid="curated-shows"></div>);
   });
 
