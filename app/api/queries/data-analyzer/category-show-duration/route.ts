@@ -1,10 +1,10 @@
 import { ICategoryShowDuration } from "@/app/types/podcast";
 import { NextResponse } from "next/server";
-import { getCategoryShowDuration } from "./util";
+import { Util } from "./util";
 
 export async function GET() {
     try {
-        const categoryShowDuration = await getCategoryShowDuration();
+        const categoryShowDuration = await Util.getCategoryShowDuration();
         return NextResponse.json({
             categoryShowDuration: categoryShowDuration?.map((ca: ICategoryShowDuration) => ({
                 ...ca,
