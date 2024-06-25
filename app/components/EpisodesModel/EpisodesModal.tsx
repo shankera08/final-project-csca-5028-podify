@@ -1,33 +1,19 @@
 import React, { useContext, useEffect, useRef } from "react";
-
-// Internal imports
 import Episodes from "../Episodes/Episodes";
-
-// Global State - Context API
 import { playerStore } from "../../store/player";
-
-// Types
 import { PlayerActionType } from "../../types/player";
-
 import styles from "./EpisodesModel.module.css";
 import { FaTimes } from "react-icons/fa";
 
-/**
- *
- * @param {podcastRef} ref to the podcast container
- * @returns {JSX} return JSX for the modal with the episodes list
- */
 const EpisodesModal = ({
   podcastRef,
 }: {
   podcastRef: React.RefObject<HTMLDivElement>;
 }) => {
-  // get the global store object
   const playerState = useContext(playerStore);
   // ref to the modal container
   const episodeModalRef = useRef<HTMLDivElement>(null);
 
-  // onClick handler for close icon
   const onClose = () => {
     if (episodeModalRef.current) {
       episodeModalRef.current.style.display = "none";
@@ -44,7 +30,6 @@ const EpisodesModal = ({
   };
 
   useEffect(() => {
-    // detect click outside of the modal in order to close it
     const onClickOutside = (event: MouseEvent) => {
       const currentTarget = event.target as HTMLDivElement;
 
@@ -80,7 +65,6 @@ const EpisodesModal = ({
     }
   }, [playerState.state.displayEpisodesModal, playerState.state.episodes]);
 
-  // TODO: fix css issues for this component
   return playerState.state.displayEpisodesModal ? (
     <div className={styles.background} ref={episodeModalRef}>
       <div className={styles.episodesContainer}>
