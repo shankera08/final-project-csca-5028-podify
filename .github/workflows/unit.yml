@@ -1,4 +1,4 @@
-name: Build
+name: Run Unit Tests
 on:
   push:
     branches: [ main, master ]
@@ -15,5 +15,5 @@ jobs:
         node-version: lts/*
     - name: Install dependencies
       run: npm install -g yarn && yarn
-    - name: Build
-      run: yarn build
+    - name: Run Unit Tests
+      run: yarn test-unit

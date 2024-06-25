@@ -1,7 +1,7 @@
 import { ICategoryShowDuration } from "@/app/types/podcast";
 import { sql } from "@vercel/postgres";
 
-export class Util {
+export class Utils {
     static async getCategoryShowDuration(): Promise<ICategoryShowDuration[]> {
         const result = await sql.query<ICategoryShowDuration>(`
             SELECT ca.category_id, ca.name, SUM(ep.duration) AS total_duration 

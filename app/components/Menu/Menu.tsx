@@ -51,7 +51,7 @@ const Menu = () => {
       </div>
       <div>
         <Link href="/shows-chart">
-          <h2 data-testId="show-chart" className={styles.clickhere}>
+          <h2 data-testid="show-chart" className={styles.clickhere}>
             Show Content Analysis
           </h2>
         </Link>
