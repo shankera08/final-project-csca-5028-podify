@@ -32,8 +32,8 @@ export default async function Home() {
 
   return (
     <main className={styles.main}>
-      <Menu />
-      <CuratedShows curatedShows={curatedShows} />
+      <Menu data-testId="menu" />
+      <CuratedShows data-testId="curated-shows" curatedShows={curatedShows} />
     </main>
   );
 }

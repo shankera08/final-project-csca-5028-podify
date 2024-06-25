@@ -16,6 +16,7 @@ const config: Config = {
     setupFilesAfterEnv: ['<rootDir>/jest.setup.ts'],
     // Add more setup options before each test is run
     // setupFilesAfterEnv: ['<rootDir>/jest.setup.ts'],
+    modulePathIgnorePatterns: ['<rootDir>/integration-tests/'],
 }
 
 // createJestConfig is exported this way to ensure that next/jest can load the Next.js config which is async
