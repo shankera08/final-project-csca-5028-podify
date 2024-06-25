@@ -19,3 +19,15 @@ QSTASH_URL=
 QSTASH_TOKEN=
 QSTASH_CURRENT_SIGNING_KEY=
 QSTASH_NEXT_SIGNING_KEY=
+
+For Week 3 Assignment,
+
+Please make a POST request to https://final-project-csca-5028.vercel.app/api/setup/categories
+
+It first creates a table - categories
+Then fetches data from external Spreaker API https://api.spreaker.com/v2/show-categories
+Please visit https://final-project-csca-5028.vercel.app/ to see the fetched data.
+
+Code for the API is under app/api/setup/categories
+
+![Category Table](image.png)
