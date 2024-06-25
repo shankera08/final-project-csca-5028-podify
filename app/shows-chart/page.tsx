@@ -14,12 +14,12 @@ const ShowsChart = () => {
   >([]);
 
   useLayoutEffect(() => {
-    fetch(`${appUrl}/api/queries/category-show-duration`)
+    fetch(`${appUrl}/api/queries/data-analyzer/category-show-duration`)
       .then((res) => res.json())
       .then(({ categoryShowDuration }) => {
         const data = categoryShowDuration?.map((ca: ICategoryShowDuration) => ({
           category: ca.name,
-          duration: Math.round(Number(ca.total_duration) / (1000 * 60 * 60)),
+          duration: ca.total_duration,
         }));
         if (data) {
           setChartData(data);
