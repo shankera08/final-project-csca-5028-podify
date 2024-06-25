@@ -4,8 +4,13 @@ on:
     branches: [ main, master ]
   pull_request:
     branches: [ main, master ]
+env:
+  QSTASH_URL: "https://qstash.upstash.io/v2/publish/"
+  QSTASH_TOKEN: "we323we"
+  QSTASH_CURRENT_SIGNING_KEY: "sig_233"
+  QSTASH_NEXT_SIGNING_KEY: "sig_232"
 jobs:
-  test:
+  build:
     timeout-minutes: 60
     runs-on: ubuntu-latest
     steps:
