@@ -10,7 +10,8 @@
     "test-unit": "env LOG_LEVEL=silent jest -c jest.config.unit.ts",
     "test-it": "env LOG_LEVEL=silent jest -c jest.config.it.ts",
     "test": "jest",
-    "test:watch": "jest --watch"
+    "test:watch": "jest --watch",
+    "test-playwright": "playwright test"
   },
   "dependencies": {
     "@upstash/qstash": "^2.5.5",
