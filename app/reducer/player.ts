@@ -1,6 +1,5 @@
 import { Reducer } from "react";
 
-// Types
 import { PlayerActionType, IPlayer, IPlayerAction } from "../types/player";
 
 export const playerReducer: Reducer<IPlayer, IPlayerAction> = (
