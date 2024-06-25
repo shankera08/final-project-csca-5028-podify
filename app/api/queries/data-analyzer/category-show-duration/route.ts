@@ -2,7 +2,7 @@ import { ICategoryShowDuration } from "@/app/types/podcast";
 import { sql } from "@vercel/postgres";
 import { NextResponse } from "next/server";
 
-export async function getCategoryShowDuration(): Promise<ICategoryShowDuration[]> {
+async function getCategoryShowDuration(): Promise<ICategoryShowDuration[]> {
     const result = await sql.query<ICategoryShowDuration>(`
         SELECT ca.category_id, ca.name, SUM(ep.duration) AS total_duration 
         FROM shows sh INNER JOIN category ca ON sh.category_id = ca.category_id
