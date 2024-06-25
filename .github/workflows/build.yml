@@ -1,4 +1,4 @@
-name: Playwright Tests
+name: Tests
 on:
   push:
     branches: [ main, master ]
@@ -15,12 +15,8 @@ jobs:
         node-version: lts/*
     - name: Install dependencies
       run: npm install -g yarn && yarn
-    - name: Start dev
-      run: yarn dev
-    - name: Install Playwright Browsers
-      run: yarn playwright install --with-deps
-    - name: Run Playwright tests
-      run: yarn playwright test
+    - name: Run Jest Tests
+      run: yarn test
     - uses: actions/upload-artifact@v4
       if: always()
       with:
